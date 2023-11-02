@@ -765,7 +765,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 6998578002372215698}
-  m_LocalRotation: {x: -0.018141268, y: 0.0048194625, z: -0.001706273, w: 0.99982244}
+  m_LocalRotation: {x: -0.018141268, y: 0.004819465, z: -0.0017062739, w: 0.99982244}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -844,7 +844,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7030822596028844068}
-  m_LocalRotation: {x: 0.018189207, y: 0.0047543193, z: -0.0018802211, w: 0.99982154}
+  m_LocalRotation: {x: 0.018189207, y: 0.00475432, z: -0.0018802211, w: 0.99982154}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
@@ -1273,10 +1273,6 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 100166, guid: a5674d01884853d4e8f2386a171e14d9,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 5403152234293719819}
-    - targetCorrespondingSourceObject: {fileID: 100166, guid: a5674d01884853d4e8f2386a171e14d9,
-        type: 3}
-      insertIndex: -1
       addedObject: {fileID: 7676366556780121042}
     - targetCorrespondingSourceObject: {fileID: 100166, guid: a5674d01884853d4e8f2386a171e14d9,
         type: 3}
@@ -1309,29 +1305,10 @@ MonoBehaviour:
   jumpSpeed: 8
   rotationSpeed: 720
   gravity: -25
-  capsule: {fileID: 5403152234293719819}
+  capsule: {fileID: 1513036408165266446}
   mover: {fileID: 7676366556780121042}
   groundDetector: {fileID: 4768206097508521547}
   groundedIndicator: {fileID: 1370878041676379843}
---- !u!114 &5403152234293719819
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 77590805609076037}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 7891d45af59ea86488119e7d5bc93b8b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  height: 2
-  radius: 0.5
-  verticalOffset: 0
-  contactOffset: 0.01
-  prioritizedOverlap:
-    serializedVersion: 2
-    m_Bits: 4294967295
 --- !u!114 &7676366556780121042
 MonoBehaviour:
   m_ObjectHideFlags: 0
