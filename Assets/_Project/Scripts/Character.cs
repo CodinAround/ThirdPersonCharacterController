@@ -1,14 +1,12 @@
 using UnityEngine;
-using UnityEngine.InputSystem;
+//using UnityEngine.InputSystem;
 
 namespace HeroicArcade.CC.Core
 {
     public class Character : MonoBehaviour
     {
-        [SerializeField] InputControl inputController;
+        [SerializeField] InputController inputController;
 
-        
+        public InputController InputController { get => inputController; }
     }
-
 }
-

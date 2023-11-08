@@ -10,6 +10,7 @@ using static MenteBacata.ScivoloCharacterController.Internal.GeometricTests;
 using static MenteBacata.ScivoloCharacterController.Internal.OverlapUtils;
 using static MenteBacata.ScivoloCharacterController.Internal.SweepTestsWithPadding;
 using Plane = MenteBacata.ScivoloCharacterController.Internal.Plane;
+using System;
 
 namespace MenteBacata.ScivoloCharacterController
 {
@@ -94,6 +95,7 @@ namespace MenteBacata.ScivoloCharacterController
         private Vector3 toCapsuleUpperCenter;
 
         private Quaternion capsuleRotation;
+        public bool isInWalkMode;
         #endregion
 
 
@@ -702,6 +704,16 @@ namespace MenteBacata.ScivoloCharacterController
         {
             if (moveContacts != null && contactCount < moveContacts.Length)
                 moveContacts[contactCount++] = moveContact;
+        }
+
+        public void Move(Vector3 vector3, MoveContact[] moveContacts, out int contactCount, int v)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Move(Vector3 vector3, MoveContact[] moveContacts, out int contactCount)
+        {
+            throw new NotImplementedException();
         }
 
         public enum Mode : byte

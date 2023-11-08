@@ -796,7 +796,7 @@ GameObject:
   - component: {fileID: 93949075}
   - component: {fileID: 93949074}
   - component: {fileID: 93949072}
-  - component: {fileID: 93949071}
+  - component: {fileID: 93949076}
   m_Layer: 6
   m_Name: Moving Platform Vertical
   m_TagString: Untagged
@@ -821,20 +821,6 @@ Transform:
   m_Father: {fileID: 1078148757}
   m_RootOrder: 16
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &93949071
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 93949069}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6e50bc1f6b8838408a64da378cc4ee8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  speed: 5
-  angularSpeed: 30
 --- !u!65 &93949072
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -906,6 +892,20 @@ MeshFilter:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 93949069}
   m_Mesh: {fileID: 569194826}
+--- !u!114 &93949076
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 93949069}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 492a3f9f5614b814fb852878c72a2c81, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  speed: 5
+  angularSpeed: 30
 --- !u!43 &104701375
 Mesh:
   m_ObjectHideFlags: 0
@@ -10227,7 +10227,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1973736024}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e6e50bc1f6b8838408a64da378cc4ee8, type: 3}
+  m_Script: {fileID: 11500000, guid: 492a3f9f5614b814fb852878c72a2c81, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 5
