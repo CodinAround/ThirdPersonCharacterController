@@ -1,6 +1,10 @@
+using System;
+using System.Collections;
+using System.Collections.Generic;
 using UnityEngine;
 using MenteBacata.ScivoloCharacterController;
 using HeroicArcade.CC.Demo;
+using Cinemachine;
 
 namespace HeroicArcade.CC.Core
 {
@@ -8,6 +12,18 @@ namespace HeroicArcade.CC.Core
     public class AvatarController : MonoBehaviour
     {
         public Character Character { get; private set; }
+
+        [SerializeField] CinemachineFreeLook cinemachineFreeLook;     // Recenter X (World Space)
+        [SerializeField] SimpleFollowRecenterX simpleFollowRecenterX; // Recenter X (Simple Follow With World Up)
+        [SerializeField] CinemachineFreeLook aimCameraLeft;
+        [SerializeField] CinemachineFreeLook aimCameraRight;
+
+        public enum AimCameraOffset
+        {
+            Left = 1,
+            Right = -1
+        }
+        public AimCameraOffset aimCameraOffset = AimCameraOffset.Left;
 
         public float moveSpeed = 5f;
 
@@ -51,6 +67,18 @@ namespace HeroicArcade.CC.Core
         private void Awake()
         {
             Character = GetComponent<Character>();
+
+            if (cinemachineFreeLook.m_BindingMode == CinemachineTransposer.BindingMode.SimpleFollowWithWorldUp)
+            {
+                if (simpleFollowRecenterX == null)
+                {
+                    Debug.LogError("Unable to OnCameraRecenterX() because CinemachineTransposer.BindingMode is SimpleFollowWithWorldUp, but SimpleFollowRecenterX component is null");
+                }
+                else
+                {
+                    simpleFollowRecenterX.enabled = true;
+                }
+            }
         }
 
         private void Start()
@@ -125,7 +153,10 @@ namespace HeroicArcade.CC.Core
             }
 
             RotateTowards(Character.velocity);
-            Character.Mover.Move(Character.velocity * deltaTime, groundDetected, groundInfo, overlapCount, overlaps, moveContacts, out contactCount);
+
+            Character.Mover.Move(Character.velocity * deltaTime, groundDetected, groundInfo, overlapCount, overlaps, Character.moveContacts, out Character.contactCount);
+            //Character.Mover.Move(Character.velocity * deltaTime, Character.moveContacts, out Character.contactCount);
+            
 
             Character.CurrentMaxMoveSpeed = 3;
             Character.Animator.SetFloat("MoveSpeed",
@@ -169,13 +200,33 @@ namespace HeroicArcade.CC.Core
                 groundedIndicator.material.color = isGrounded ? Color.green : Color.blue;
         }
 
-        private void RotateTowards(in Vector3 direction)
+        private void RotateTowards(Vector3 direction)
         {
-            Vector3 flatDirection = Vector3.ProjectOnPlane(direction, transform.up);
+            switch (Character.CamStyle)
+            {
+                case Character.CameraStyle.Adventure:
+                    //Do nothing
+                    break;
 
+                case Character.CameraStyle.Combat:
+                    direction = cameraTransform.forward;
+                    break;
+
+                case Character.CameraStyle.EricWei:
+                    if (direction.sqrMagnitude == 0)
+                    {
+                        goto case Character.CameraStyle.Adventure;
+                    }
+                    goto case Character.CameraStyle.Combat;
+
+                default:
+                    Debug.LogError($"Unexpected CameraStyle {Character.CamStyle}");
+                    return;
+            }
+
+            Vector3 flatDirection = Vector3.ProjectOnPlane(direction, transform.up);
             if (flatDirection.sqrMagnitude < 1E-06f)
                 return;
-
             Quaternion targetRotation = Quaternion.LookRotation(flatDirection, transform.up);
             transform.rotation = Quaternion.RotateTowards(transform.rotation, targetRotation, Character.TurnSpeed * Time.deltaTime);
         }
@@ -205,9 +256,9 @@ namespace HeroicArcade.CC.Core
 
         private void BounceDownIfTouchedCeiling()
         {
-            for (int i = 0; i < contactCount; i++)
+            for (int i = 0; i < Character.contactCount; i++)
             {
-                if (Vector3.Dot(moveContacts[i].normal, transform.up) < -0.7f)
+                if (Vector3.Dot(Character.moveContacts[i].normal, transform.up) < -0.7f)
                 {
                     verticalSpeed = -0.25f * verticalSpeed;
                     break;
@@ -222,5 +273,75 @@ namespace HeroicArcade.CC.Core
             currentMovement.x = moveInput.x;
             currentMovement.z = moveInput.y;
         }
-    }
-}
+
+        IEnumerator CameraRecenterX(float duration)
+        {
+            yield return new WaitForSeconds(duration);
+            cinemachineFreeLook.m_RecenterToTargetHeading.m_RecenteringTime = 0;
+            cinemachineFreeLook.m_RecenterToTargetHeading.m_enabled = false;
+        }
+
+        public void OnCameraRecenterX(bool isCameraRecenterXPressed)
+        {
+            switch (cinemachineFreeLook.m_BindingMode)
+            {
+                case CinemachineTransposer.BindingMode.SimpleFollowWithWorldUp:
+                    if (isCameraRecenterXPressed)
+                        simpleFollowRecenterX.recenter = true;
+                    break;
+                case CinemachineTransposer.BindingMode.WorldSpace:
+                    if (cinemachineFreeLook.m_RecenterToTargetHeading.m_enabled)
+                    {
+                        if (!isCameraRecenterXPressed)
+                        {
+                            cinemachineFreeLook.m_RecenterToTargetHeading.m_RecenteringTime = 0;
+                            cinemachineFreeLook.m_RecenterToTargetHeading.m_enabled = false;
+                        }
+                    }
+                    else if (isCameraRecenterXPressed)
+                    {
+                        const float duration = 0.01f;
+                        cinemachineFreeLook.m_RecenterToTargetHeading.m_enabled = isCameraRecenterXPressed;
+                        cinemachineFreeLook.m_RecenterToTargetHeading.m_RecenteringTime = duration;
+                        cinemachineFreeLook.m_RecenterToTargetHeading.RecenterNow();
+                        StartCoroutine("CameraRecenterX", 3 * duration); //A very long period
+                    }
+                    break;
+            }
+
+
+        }
+        public void OnCameraAim(bool isCameraAimPressed)
+        {
+            Character.CamStyle = isCameraAimPressed ? Character.CameraStyle.Combat : Character.CameraStyle.Adventure;
+            if (!isCameraAimPressed)
+            {
+                aimCameraLeft.Priority = 5;
+                aimCameraRight.Priority = 5;
+            }
+            else if (aimCameraOffset == AimCameraOffset.Left)
+            {
+                aimCameraLeft.Priority = 20;
+                aimCameraRight.Priority = 5;
+            }
+            else
+            {
+                aimCameraLeft.Priority = 5;
+                aimCameraRight.Priority = 20;
+            }
+        }
+
+        public void OnAimSwap()
+        {
+            if (aimCameraOffset == AimCameraOffset.Left)
+            {
+                aimCameraOffset = AimCameraOffset.Right;
+            }
+            else
+            {
+                aimCameraOffset = AimCameraOffset.Left;
+            }
+            OnCameraAim(Character.InputController.IsAimingPressed);
+        }
+    } // End of AvatarController class
+} // End of HeroicArcade.CC.Core namespace

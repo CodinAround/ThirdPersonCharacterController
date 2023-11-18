@@ -53,6 +53,33 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""processors"": """",
                     ""interactions"": """",
                     ""initialStateCheck"": true
+                },
+                {
+                    ""name"": ""CameraRecenterX"",
+                    ""type"": ""Button"",
+                    ""id"": ""8c3c3d93-5657-40ce-a8b3-e968e1641e35"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""Aim"",
+                    ""type"": ""Button"",
+                    ""id"": ""b5e07c32-ed67-4605-a3b1-12a9a2e81d3d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
+                },
+                {
+                    ""name"": ""AimSwap"",
+                    ""type"": ""Button"",
+                    ""id"": ""cd59e7fb-8155-4435-abc6-4d89fd608415"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """",
+                    ""initialStateCheck"": false
                 }
             ],
             ""bindings"": [
@@ -165,6 +192,72 @@ public partial class @Controls: IInputActionCollection2, IDisposable
                     ""action"": ""Look"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""62874fe0-4e0f-445f-b514-f01bf5e29363"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraRecenterX"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""b60bc4ca-f96b-4ea3-8dc3-ae02186e9756"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""CameraRecenterX"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""cd9e998b-4f1b-41e0-a824-768288adcf11"",
+                    ""path"": ""<Mouse>/rightButton"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""c805dcba-c325-4ccb-a09c-0a479056b795"",
+                    ""path"": ""<Gamepad>/leftTrigger"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""Aim"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""30804912-9ebe-4c80-93b5-d7f024b949ec"",
+                    ""path"": ""<Keyboard>/f"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AimSwap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""da808549-15a8-4d2b-9c6e-bc1be629d100"",
+                    ""path"": ""<Gamepad>/rightStickPress"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": """",
+                    ""action"": ""AimSwap"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -176,6 +269,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         m_Gameplay_Move = m_Gameplay.FindAction("Move", throwIfNotFound: true);
         m_Gameplay_Jump = m_Gameplay.FindAction("Jump", throwIfNotFound: true);
         m_Gameplay_Look = m_Gameplay.FindAction("Look", throwIfNotFound: true);
+        m_Gameplay_CameraRecenterX = m_Gameplay.FindAction("CameraRecenterX", throwIfNotFound: true);
+        m_Gameplay_Aim = m_Gameplay.FindAction("Aim", throwIfNotFound: true);
+        m_Gameplay_AimSwap = m_Gameplay.FindAction("AimSwap", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -240,6 +336,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
     private readonly InputAction m_Gameplay_Move;
     private readonly InputAction m_Gameplay_Jump;
     private readonly InputAction m_Gameplay_Look;
+    private readonly InputAction m_Gameplay_CameraRecenterX;
+    private readonly InputAction m_Gameplay_Aim;
+    private readonly InputAction m_Gameplay_AimSwap;
     public struct GameplayActions
     {
         private @Controls m_Wrapper;
@@ -247,6 +346,9 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         public InputAction @Move => m_Wrapper.m_Gameplay_Move;
         public InputAction @Jump => m_Wrapper.m_Gameplay_Jump;
         public InputAction @Look => m_Wrapper.m_Gameplay_Look;
+        public InputAction @CameraRecenterX => m_Wrapper.m_Gameplay_CameraRecenterX;
+        public InputAction @Aim => m_Wrapper.m_Gameplay_Aim;
+        public InputAction @AimSwap => m_Wrapper.m_Gameplay_AimSwap;
         public InputActionMap Get() { return m_Wrapper.m_Gameplay; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -265,6 +367,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Look.started += instance.OnLook;
             @Look.performed += instance.OnLook;
             @Look.canceled += instance.OnLook;
+            @CameraRecenterX.started += instance.OnCameraRecenterX;
+            @CameraRecenterX.performed += instance.OnCameraRecenterX;
+            @CameraRecenterX.canceled += instance.OnCameraRecenterX;
+            @Aim.started += instance.OnAim;
+            @Aim.performed += instance.OnAim;
+            @Aim.canceled += instance.OnAim;
+            @AimSwap.started += instance.OnAimSwap;
+            @AimSwap.performed += instance.OnAimSwap;
+            @AimSwap.canceled += instance.OnAimSwap;
         }
 
         private void UnregisterCallbacks(IGameplayActions instance)
@@ -278,6 +389,15 @@ public partial class @Controls: IInputActionCollection2, IDisposable
             @Look.started -= instance.OnLook;
             @Look.performed -= instance.OnLook;
             @Look.canceled -= instance.OnLook;
+            @CameraRecenterX.started -= instance.OnCameraRecenterX;
+            @CameraRecenterX.performed -= instance.OnCameraRecenterX;
+            @CameraRecenterX.canceled -= instance.OnCameraRecenterX;
+            @Aim.started -= instance.OnAim;
+            @Aim.performed -= instance.OnAim;
+            @Aim.canceled -= instance.OnAim;
+            @AimSwap.started -= instance.OnAimSwap;
+            @AimSwap.performed -= instance.OnAimSwap;
+            @AimSwap.canceled -= instance.OnAimSwap;
         }
 
         public void RemoveCallbacks(IGameplayActions instance)
@@ -300,5 +420,8 @@ public partial class @Controls: IInputActionCollection2, IDisposable
         void OnMove(InputAction.CallbackContext context);
         void OnJump(InputAction.CallbackContext context);
         void OnLook(InputAction.CallbackContext context);
+        void OnCameraRecenterX(InputAction.CallbackContext context);
+        void OnAim(InputAction.CallbackContext context);
+        void OnAimSwap(InputAction.CallbackContext context);
     }
 }
